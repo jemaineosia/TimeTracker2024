@@ -23,5 +23,24 @@ namespace TimeTracker.API.Controllers
             return Ok(_timeEntries);
         }
 
+        [HttpGet("{id}")]
+        public ActionResult<TimeEntry> GetTimeEntryById(int id)
+        {
+            var timeEntry = _timeEntries.FirstOrDefault(x => x.Id == id);
+            if (timeEntry == null)
+            {
+                return NotFound();
+            }
+            return Ok(timeEntry);
+        }
+
+        [HttpPost]
+        public ActionResult<TimeEntry> AddTimeEntry(TimeEntry timeEntry)
+        {
+            timeEntry.Id = _timeEntries.Count + 1;
+            _timeEntries.Add(timeEntry);
+            return CreatedAtAction(nameof(GetTimeEntryById), new { id = timeEntry.Id }, timeEntry);
+        }
+
     }
 }
